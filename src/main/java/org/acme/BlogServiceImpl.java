@@ -1,88 +1,102 @@
 package org.acme;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
     public class BlogServiceImpl implements BlogService {
-        List<Blog> blogs = new ArrayList<>();
 
-        public BlogServiceImpl() {
-
-            Blog blog = new Blog();
-            blog.author = "Ruchir";
-            blog.name = "Omicron";
-            Blog blog2 = new Blog();
-            blog2.author = "Shuba";
-            blog2.name = "Delta";
-
-            Blog blog3 = new Blog();
-            blog3.author = "Radha";
-            blog3.name = "Covid";
-
-            blogs.add(blog);
-            blogs.add(blog2);
-            blogs.add(blog3);
+    @Inject
+    BloggingRepository bloggingRepository;
 
 
-        }
+    public BlogServiceImpl() {
 
-        public List<Blog> getBlogs() {
+    }
 
-            return blogs;
-        }
+    @Transactional
+    public List<Blog> getBlogs() {
+        return Blog.listAll();
+    }
 
-        public Blog postBlog(String name, String author) {
-            Blog blog = new Blog();
-            blog.author = author;
-            blog.name = name;
-            blogs.add(blog);
-            return blog;
+//    @Transactional
+//    public Blog postBlog(String name, String author) {
+//        Blog blog = new Blog();
+//        blog.author = author;
+//        blog.name = name;
+//        blog.persist();
+//        return blog;
+//
+//
+//    }
 
-
-        }
-
-        public Blog getBlog(String name,String author) {
-            for (Blog blog1 : blogs) {
-                if (blog1.name.equals(name) && blog1.author.equals(author)) {
-                    blog1.name = name;
-                    blog1.author=author;
-                    blogs.add(blog1);
-
-                }
+    @Transactional
+    public Blog getBlog(int id) {
+        Blog blog = new Blog();
+        List<Blog> blogs = Blog.listAll();
+        for (Blog blog1 : blogs) {
+            if (blog1.id.equals(id)) {
+                return blog;
             }
-            return null;
         }
+        return null;
+    }
 
-        public Blog updateBlog(String name, String author) {
-            for (Blog blog1 : blogs) {
-                if (blog1.name.equals(name)) {
-                    blog1.name = name;
-                    blog1.author = author;
+//
+//    @Transactional
+//    public Blog updateBlog(String name, String author) {
+//        Blog blog = new Blog();
+//        List<Blog> blogs = Blog.listAll();
+//        for (Blog blog1 : blogs) {
+//            if (blog1.name.equals(name)) {
+//                blog1.name = name;
+//                blog1.author = author;
+//                blog.persist();
+//                return blog;
+//
+//
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public Blog deleteBlog(String name, String author ) {
+//        Blog blog = new Blog();
+//        if (blog.isPersistent()) {
+//            blog.name = name;
+//            blog.author = author;
+//            blog.delete();
+//        }
+//
+//        return null;
+//    }
+    public List<Blog> blogByAuthorName(String name) {
+
+        return bloggingRepository.getBlogsByAuthorName(name);
+    }
+
+    public Blog updateBlog(String name, String author) {
+
+        return bloggingRepository.updateBlog(name,author);
+    }
 
 
-                }
-            }
-            return null;
-        }
+    public Blog postBlog(String name, String author) {
+
+        return bloggingRepository.postBlog(name,author);
+    }
+
 
     public Blog deleteBlog(String name, String author) {
-        for (Blog blog1 : blogs) {
-            if (blog1.name.equals(name)) {
-                blog1.name = name;
-                blog1.author = author;
-                blogs.remove(blog1);
-            }
-            }
-            return null;
-        }
+
+        return bloggingRepository.deleteBlog(name,author);
     }
 
 
 
-
-
-
+}
 
 
 
