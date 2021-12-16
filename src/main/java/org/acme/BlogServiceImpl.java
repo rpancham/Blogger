@@ -21,19 +21,9 @@ import java.util.List;
         return Blog.listAll();
     }
 
-//    @Transactional
-//    public Blog postBlog(String name, String author) {
-//        Blog blog = new Blog();
-//        blog.author = author;
-//        blog.name = name;
-//        blog.persist();
-//        return blog;
-//
-//
-//    }
 
     @Transactional
-    public Blog getBlog(int id) {
+    public Blog getBlog(Blog id) {
         Blog blog = new Blog();
         List<Blog> blogs = Blog.listAll();
         for (Blog blog1 : blogs) {
@@ -44,65 +34,26 @@ import java.util.List;
         return null;
     }
 
-//
-//    @Transactional
-//    public Blog updateBlog(String name, String author) {
-//        Blog blog = new Blog();
-//        List<Blog> blogs = Blog.listAll();
-//        for (Blog blog1 : blogs) {
-//            if (blog1.name.equals(name)) {
-//                blog1.name = name;
-//                blog1.author = author;
-//                blog.persist();
-//                return blog;
-//
-//
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public Blog deleteBlog(String name, String author ) {
-//        Blog blog = new Blog();
-//        if (blog.isPersistent()) {
-//            blog.name = name;
-//            blog.author = author;
-//            blog.delete();
-//        }
-//
-//        return null;
-//    }
-    public List<Blog> blogByAuthorName(String name) {
 
-        return bloggingRepository.getBlogsByAuthorName(name);
+    @Transactional
+    public Blog postBlog(Blog blog) {
+
+        return bloggingRepository.postBlog(blog);
     }
 
-    public Blog updateBlog(String name, String author) {
-
-        return bloggingRepository.updateBlog(name,author);
+    @Transactional
+    public Blog UpdateBlog(String id , Blog blog) {
+        return bloggingRepository.updateBlog(id);
     }
 
 
-    public Blog postBlog(String name, String author) {
-
-        return bloggingRepository.postBlog(name,author);
+    @Transactional
+    public String deleteBlog(long id ) {
+        return bloggingRepository.findanddelete(id);
     }
-
-
-    public Blog deleteBlog(String name, String author) {
-
-        return bloggingRepository.deleteBlog(name,author);
-    }
-
 
 
 }
-
-
-
-
-
-
 
 
 

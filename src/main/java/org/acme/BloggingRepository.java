@@ -12,11 +12,12 @@ import net.bytebuddy.build.AccessControllerPlugin;
     @ApplicationScoped
     public class BloggingRepository implements PanacheRepository<Blog> {
 
-        List<Blog> getBlogsByAuthorName(String name) {
+        public List<Blog> getBlog(int id) {
             List<Blog> blogs = listAll();
             List<Blog> response = new ArrayList<>();
             for (Blog blog : blogs) {
-                if (blog.author.equals(name)) {
+                if (blog.id.equals(id))
+                {
                     response.add(blog);
                 }
             }
@@ -24,15 +25,21 @@ import net.bytebuddy.build.AccessControllerPlugin;
         }
 
 
+        public Blog postBlog(Blog blog) {
+            blog.persist();
+            return blog;
 
 
-        public Blog updateBlog(String name, String author) {
+        }
+
+
+
+        public Blog updateBlog(String name) {
             Blog blog = new Blog();
             List<Blog> blogs = Blog.listAll();
             for (Blog blog1 : blogs) {
                 if (blog1.name.equals(name)) {
-                    blog1.name = name;
-                    blog1.author = author;
+                    blog1.name =  name;
                     blog.persist();
                     return blog;
 
@@ -44,32 +51,15 @@ import net.bytebuddy.build.AccessControllerPlugin;
 
 
 
-
-
-
-        public Blog postBlog(String name, String author) {
-            Blog blog = new Blog();
-            blog.author = author;
-            blog.name = name;
-            blog.persist();
-            return blog;
-
-
-        }
-
-
-        public Blog deleteBlog(String name, String author ) {
-            Blog blog = new Blog();
+        String findanddelete(long id) {
+            Blog blog = findById(id);
             if (blog.isPersistent()) {
-                blog.name = name;
-                blog.author = author;
-                blog.delete();
+                if (deleteById(id) == true) {
+                    return "Item is deleted with id" + id;
+                }
             }
-
-            return null;
+            return "Item is not deleted with id";
         }
-
-
 
 
 

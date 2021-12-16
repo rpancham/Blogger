@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/Blogs")
@@ -17,52 +18,64 @@ public class GreetingResource {
     @Path("/blog")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public List<Blog> Blogwithqwery(@QueryParam("name") String name) {
+    public List<Blog> Blogwithqwery(@QueryParam("id") int id) {
+
         return blogService.getBlogs();
     }
 
     @GET
-    @Path("/blogByAuthorName")
+    @Path("/blog")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public List<Blog> blogByAuthorName(@QueryParam("name") String name) {
-        return blogService.blogByAuthorName(name);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Blog getBlog(Blog blog) {
+        return blogService.getBlog(blog);
     }
+
+//    @POST
+//    @Path("/blog")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Transactional
+//    public Blog postBlog(Blog blog) {
+//        return blogService.postBlog(blog);
+//    }
 
 
     @POST
     @Path("/blog")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Blog PostBlog(@QueryParam("name") String name, @QueryParam("author") String author) {
-        return blogService.postBlog(name, author);
+    public Response postBlog(Blog blog) {
+        blogService.postBlog(blog);
+        return Response.status(Response.Status.CREATED).build();
     }
+
+
+
+
+
+
 
     @PUT
-    @Path("/blog")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Blog updateBlog(@QueryParam("name") String name, @QueryParam("author") String author){
-        return blogService.updateBlog(name, author);
-    }
-
-    @GET
     @Path("/blog/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Blog getBlog(@PathParam("id") int id) {
-        return blogService.getBlog(id);
+    public Blog UpdateBlog(@PathParam("id") String id,Blog blog) {
+        return blogService.UpdateBlog(id,blog);
     }
 
 
 
     @DELETE
-   @Path("/blog")
-   @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Blog deleteBlog(@QueryParam("name") String name, @QueryParam("author") String author){
-       return blogService.deleteBlog(name, author);
+    @Path("/blog/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteBlog(@PathParam("id") long id) {
+        return blogService.deleteBlog(id);
     }
+
+
 }
 
 
